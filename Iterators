@@ -1,0 +1,44 @@
+def iterador_con_sustitucion(iterable, cambios):
+    """
+    Dado un iterable genera sus valores una vez aplicadas las sustituciones
+    indicadas por el diccionario de cambios.
+    Los valores no hay que devolverlos todos a la vez, se deben generar de uno
+    en uno.
+    """
+    for element in iterable:
+        if (element in cambios):
+
+            yield cambios.get(element)
+        else:
+            yield element
+
+
+def test_iterador_con_sustitucion():
+    """
+    Casos de prueba para iterador_con_sustitucion().
+    """
+
+    for iterable, cambios, iterable_sustituido in (
+            ([1, 2, 3, 4, 1, 2], {2: 1, 1: 2, 3: 5}, [2, 1, 5, 4, 2, 1]),
+            ([1, 2, 3, 4, 1, 2] * 100, {2: 1, 1: 2, 3: 5},
+             [2, 1, 5, 4, 2, 1] * 100),
+            ("abcdb" * 100, {'a': 'z', 'b': 'a', 'd': 'y'},
+             ['z', 'a', 'c', 'y', 'a'] * 100)
+    ):
+        assert (list(iterador_con_sustitucion(iterable, cambios))
+                == iterable_sustituido)
+
+        it = iterador_con_sustitucion(iterable, cambios)
+        for e in iterable_sustituido:
+            assert e == next(it)
+
+    for v in iterador_con_sustitucion(range(10 * 100), {0: 0}):
+        if v >= 100:
+            break
+
+    return True
+
+
+if __name__ == "__main__":
+    test_iterador_con_sustitucion()
+    print("OK")  
